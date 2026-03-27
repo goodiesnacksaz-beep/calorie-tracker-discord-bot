@@ -2,11 +2,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import os
-from dotenv import load_dotenv
 import sqlite3
 
 # LOAD TOKEN
-load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
 # Database Setup

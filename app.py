@@ -118,4 +118,4 @@ async def add_meal(interaction: discord.Interaction, name: str, calories: int):
     except Exception as e:
         await interaction.response.send_message(f"Error: {e}", ephemeral=True)
 
-bot.run(get_token)
+bot.run(get_token())

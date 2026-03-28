@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 # LOAD TOKEN Func
-def: get_token:
+def get_token():
     return os.getenv('DISCORD_TOKEN')
 
 # Database Setup

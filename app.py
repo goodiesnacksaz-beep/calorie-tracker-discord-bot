@@ -4,6 +4,7 @@ from discord.ext import commands
 import os
 import sqlite3
 
+print("ENV CHECK:", os.environ.get("DISCORD_TOKEN"))
 # LOAD TOKEN Func
 def get_token():
     return os.getenv('DISCORD_TOKEN')

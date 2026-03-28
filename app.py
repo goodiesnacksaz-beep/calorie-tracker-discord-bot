@@ -72,10 +72,10 @@ async def set_goal(interaction: discord.Interaction, calories: int):
         
         await interaction.response.send_message(
             f"🎯 Goal updated! Your daily target is now **{calories}** calories.", 
-            ephemeral=True
+            ephemeral=False
         )
     except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
+        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=False)
 
 @bot.tree.command(name="ping", description="Check the bot's latency!")
 async def ping(interaction: discord.Interaction):
@@ -114,9 +114,9 @@ async def add_meal(interaction: discord.Interaction, name: str, calories: int):
         else:
             status_msg = f"Logged **{name}** ({calories} kcal). Use `/set_goal` to track progress!"
 
-        await interaction.response.send_message(status_msg, ephemeral=True)
+        await interaction.response.send_message(status_msg, ephemeral=False)
         
     except Exception as e:
-        await interaction.response.send_message(f"Error: {e}", ephemeral=True)
+        await interaction.response.send_message(f"Error: {e}", ephemeral=False)
 
 bot.run(get_token())

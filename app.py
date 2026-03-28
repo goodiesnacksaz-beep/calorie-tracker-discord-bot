@@ -4,8 +4,9 @@ from discord.ext import commands
 import os
 import sqlite3
 
-# LOAD TOKEN
-token = os.getenv('DISCORD_TOKEN')
+# LOAD TOKEN Func
+def: get_token:
+    return os.getenv('DISCORD_TOKEN')
 
 # Database Setup
 con = sqlite3.connect("meallog.db")
@@ -117,4 +118,4 @@ async def add_meal(interaction: discord.Interaction, name: str, calories: int):
     except Exception as e:
         await interaction.response.send_message(f"Error: {e}", ephemeral=True)
 
-bot.run(token)
+bot.run(get_token)

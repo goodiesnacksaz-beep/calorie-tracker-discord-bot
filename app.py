@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 import os
 import sqlite3
+from datetime import datetime, timedelta, timezone # Import for time management
 
 print("ENV CHECK:", os.environ.get("DISCORD_TOKEN"))
 # LOAD TOKEN Func
@@ -86,19 +87,23 @@ async def ping(interaction: discord.Interaction):
 async def add_meal(interaction: discord.Interaction, name: str, calories: int):
     user_id = interaction.user.id
     
+    # 1. Define Arizona Time (UTC-7)
+    # Arizona does not observe Daylight Saving Time, so this offset remains constant.
+    az_tz = timezone(timedelta(hours=-7))
+    az_today = datetime.now(az_tz).strftime('%Y-%m-%d')
+    
     try:
-        # Insert the meal into the database
+        # 2. Insert the meal using the Arizona date instead of the default CURRENT_DATE (UTC)
         cur.execute(
-            "INSERT INTO meals (user_id, meal_name, calories) VALUES (?, ?, ?)",
-            (user_id, name, calories)
+            "INSERT INTO meals (user_id, meal_name, calories, date) VALUES (?, ?, ?, ?)",
+            (user_id, name, calories, az_today)
         )
         con.commit()
         
-        # Now, let's calculate the progress
-        # We sum all calories logged by this user TODAY
+        # 3. Sum calories specifically for the Arizona date
         cur.execute(
-            "SELECT SUM(calories) FROM meals WHERE user_id = ? AND date = CURRENT_DATE",
-            (user_id,)
+            "SELECT SUM(calories) FROM meals WHERE user_id = ? AND date = ?",
+            (user_id, az_today)
         )
         total_today = cur.fetchone()[0] or 0
         
@@ -110,7 +115,7 @@ async def add_meal(interaction: discord.Interaction, name: str, calories: int):
             goal = goal_row[0]
             remaining = goal - total_today
             status_msg = f"Logged **{name}** ({calories} kcal).\n"
-            status_msg += f"Total today: **{total_today}/{goal}** kcal. (**{remaining}** left!)"
+            status_msg += f"Total today (AZ Time): **{total_today}/{goal}** kcal. (**{remaining}** left!)"
         else:
             status_msg = f"Logged **{name}** ({calories} kcal). Use `/set_goal` to track progress!"
 
